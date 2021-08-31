@@ -1,16 +1,16 @@
-import { Controller,Post,Body, Get } from "@nestjs/common";
+import { Controller,Post,Body, Get,Req } from "@nestjs/common";
 import { UserService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { User } from "./users.model";
+import { Request } from "express";
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService) {
-
+    constructor(private userService: UserService) {}
+    @Get()
+    async fetchAll(@Req() request: Request):Promise<any> {
+        console.log(request);
+        const response = await this.userService.fetchUsers()
+        return response
     }
-    // @Get()
-    // fetchAll():Array<User> {
-    //     return this.userService.users
-    // }
     @Post()
     async addUser(@Body() insertUser: CreateUserDto): Promise<any>{
         const {firstName,lastName,email,password} = insertUser;
