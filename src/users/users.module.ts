@@ -4,6 +4,7 @@ import { UserService } from './users.service';
 import { HttpModule } from '@nestjs/axios';
 import { MongooseModule } from '@nestjs/mongoose';
 import { userSchema } from './users.model';
+import { AuthService } from 'src/auth/auth.service';
 @Module({
   imports: [
     HttpModule,
