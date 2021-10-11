@@ -6,11 +6,13 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -20,14 +22,16 @@ export class UserController {
     const response = await this.userService.fetchUsers();
     return response;
   }
-  // Get a single user
+  // Get a single user profile
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async fetchUser(@Param('id') param: string): Promise<any> {
     console.log(param);
     const response = await this.userService.fetchUser(param);
     return response;
   }
-  //Delete a user
+  //Delete a user profile
+  @UseGuards(JwtAuthGuard)
   @Delete(':id/delete')
   async deleteUser(@Param('id') param: string): Promise<any> {
     const response = await this.userService.deleteUser(param);
@@ -47,16 +51,8 @@ export class UserController {
     );
     return response;
   }
-  //   //Login
-  //   @Post('login')
-  //   async login(@Body() login: LoginUserDto): Promise<any> {
-  //     const { email, password } = login;
-  //     const response = await this.authService.validateUser(email, password);
-  //     if(response){
-
-  //     }
-  //   }
   //Update user info
+  @UseGuards(JwtAuthGuard)
   @Put(':id/update')
   async updateUser(
     @Param('id') param: string,
