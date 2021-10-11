@@ -19,7 +19,7 @@ export class AuthController {
   async login(
     @Body() userLoginDto: LoginUserDto,
     @Res() res: Response,
-  ): Promise<any> {
+  ): Promise<void> {
     const { email, password } = userLoginDto;
     const response = await this.authService.validateUser(email, password);
     if (response.bool) {

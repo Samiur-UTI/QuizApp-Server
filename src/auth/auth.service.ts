@@ -10,22 +10,33 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   async validateUser(email: string, password: string): Promise<any> {
-    const users = await this.usersService.fetchUsers();
-    const user = users.filter((user) => user.email === email);
-    if (user.length) {
-      try {
-        const bool = await bcrypt.compare(password, user[0].password);
+    const re =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (re.test(email)) {
+      const users = await this.usersService.fetchUsers();
+      const user = users.filter((user) => user.email === email);
+      if (user.length) {
+        try {
+          const bool = await bcrypt.compare(password, user[0].password);
+          return {
+            user,
+            bool,
+          };
+        } catch (error) {
+          return false;
+        }
+      } else {
         return {
-          user,
-          bool,
+          bool: false,
         };
-      } catch (error) {
-        return false;
       }
     } else {
-      throw new Error(`No user found`);
+      return {
+        bool: false,
+      };
     }
   }
+
   async initiateToken(user: User[]) {
     const { id, email } = user[0];
     return {

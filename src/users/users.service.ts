@@ -12,7 +12,10 @@ export class UserService {
   }
   async fetchUser(userId: string): Promise<User> {
     const response = await this.userModel.findById(userId);
-    return response;
+    if (response) {
+      console.log(response);
+      return response;
+    }
   }
   async deleteUser(userId: string): Promise<any> {
     const response = await this.userModel.findByIdAndDelete(userId);
@@ -30,8 +33,20 @@ export class UserService {
       email,
       password,
     });
-    const response = await newUser.save();
-    return response.id;
+    const re =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (re.test(email)) {
+      const checker = await this.fetchUsers();
+      const exists = checker.filter((user) => user.email === newUser.email);
+      if (!exists.length) {
+        const response = await newUser.save();
+        return response.id;
+      } else {
+        return 'Email already exists';
+      }
+    } else {
+      return 'Invalid email address';
+    }
   }
   async updateUser(userId: string, user: UpdateUserDto): Promise<any> {
     const response = await this.userModel.findByIdAndUpdate(userId, user);
