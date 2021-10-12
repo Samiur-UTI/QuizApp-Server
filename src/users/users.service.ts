@@ -59,7 +59,7 @@ export class UserService {
         /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
       if (re.test(email)) {
         const checker = await this.fetchUsers();
-        const exists = checker.filter((user) => user.email === user.email);
+        const exists = checker.filter((users) => users.email === user.email);
         if (!exists.length) {
           const response = await this.userModel.findByIdAndUpdate(userId, user);
           return response;
