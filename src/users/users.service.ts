@@ -3,6 +3,7 @@ import { User } from './users.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ErrorDto } from 'src/auth/dto/error.dto';
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
@@ -48,8 +49,29 @@ export class UserService {
       return 'Invalid email address';
     }
   }
-  async updateUser(userId: string, user: UpdateUserDto): Promise<any> {
-    const response = await this.userModel.findByIdAndUpdate(userId, user);
-    return response;
+  async updateUser(
+    userId: string,
+    user: UpdateUserDto,
+  ): Promise<User | string> {
+    const { email } = user;
+    if (email) {
+      const re =
+        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      if (re.test(email)) {
+        const checker = await this.fetchUsers();
+        const exists = checker.filter((user) => user.email === user.email);
+        if (!exists.length) {
+          const response = await this.userModel.findByIdAndUpdate(userId, user);
+          return response;
+        } else {
+          return 'Email address already in use';
+        }
+      } else {
+        return 'Invalid email address' ;
+      }
+    } else {
+      const response = await this.userModel.findByIdAndUpdate(userId, user);
+      return response;
+    }
   }
 }

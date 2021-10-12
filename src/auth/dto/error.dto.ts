@@ -1,3 +1,3 @@
 export interface ErrorDto {
-    error: string;
+  error: string;
 }
