@@ -9,7 +9,6 @@ import {
   UseGuards,
   Req,
   Res,
-  Query,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserService } from './users.service';
@@ -18,7 +17,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, Response } from 'express';
 import { User } from '../auth/dto/user.dto';
-import { ErrorDto } from '../auth/dto/error.dto';
 interface UserInfo {
   id: string;
   email: string;
@@ -54,6 +52,7 @@ export class UserController {
   async deleteUser(@Req() req: Request, @Res() res: Response): Promise<void> {
     const { id } = req.user as UserInfo;
     const response = await this.userService.deleteUser(id);
+    console.log(response);
     if (response) {
       res.json({ message: 'Profile deleted successfully' });
     } else {
