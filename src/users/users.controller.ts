@@ -27,60 +27,59 @@ export class UserController {
   constructor(private userService: UserService) {}
   //Get all users
   @Get()
-  async fetchAll(@Res() res: Response): Promise<User[] | void> {
+  async fetchAll(): Promise<User[] | ErrorDto> {
     const response = await this.userService.fetchUsers();
     if (response.length) {
       return response;
     } else {
-      res.json({ message: 'Database is empty' });
+      return { error: 'Could not fetch all users' };
     }
   }
   // Get a single user profile
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async fetchUser(@Req() req: Request, @Res() res: Response): Promise<void> {
+  async fetchUser(@Req() req: Request): Promise<User | ErrorDto> {
     const { id } = req.user as UserInfo;
     const response: User | ErrorDto = await this.userService.fetchUser(id);
     if (response) {
-      res.json(response) as Response;
+      return response;
     } else {
-      res.json({ message: 'No user found' }) as Response;
+      return { error: 'No user found' };
     }
   }
   //Delete a user profile
   @UseGuards(JwtAuthGuard)
   @Delete('profile/delete')
-  async deleteUser(@Req() req: Request, @Res() res: Response): Promise<void> {
+  async deleteUser(@Req() req: Request): Promise<{ message: string }> {
     const { id } = req.user as UserInfo;
     const response = await this.userService.deleteUser(id);
     console.log(response);
     if (response) {
-      res.json({ message: 'Profile deleted successfully' });
+      return { message: 'Profile deleted successfully' };
     } else {
-      res.json({ message: 'Profile not found' });
+      return { message: 'Profile not found' };
     }
   }
   //Create a new user
   @Post('signup')
   async addUser(
     @Body() insertUser: CreateUserDto,
-    @Res() res: Response,
-  ): Promise<void> {
+  ): Promise<{ message: string }> {
     const { firstName, lastName, email, password } = insertUser;
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(password, salt);
     if (firstName && lastName && email && password) {
-      const response = await this.userService.insertUser(
+      const response: string = await this.userService.insertUser(
         firstName,
         lastName,
         email,
         hash,
       );
-      res.json({ message: response });
+      return { message: response };
     } else {
-      res.json({
+      return {
         message: 'Cannot create profile with insufficient credentials',
-      });
+      };
     }
   }
   //Update user info
@@ -90,16 +89,16 @@ export class UserController {
     @Req() req: Request,
     @Res() res: Response,
     @Body() updateUser: UpdateUserDto,
-  ): Promise<void> {
+  ): Promise<{ message: string | User }> {
     const { id } = req.user as UserInfo;
     const response: User | string = await this.userService.updateUser(
       id,
       updateUser,
     );
     if (typeof response !== 'string') {
-      res.json({ message: 'Profile update successful' });
+      return { message: 'Profile update successful' };
     } else {
-      res.json({ message: response });
+      return { message: response };
     }
   }
 }
