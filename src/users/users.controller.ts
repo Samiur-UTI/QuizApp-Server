@@ -17,7 +17,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, Response } from 'express';
 import { User } from '../auth/dto/user.dto';
-interface UserInfo {
+import { ErrorDto } from 'src/auth/dto/error.dto';
+export interface UserInfo {
   id: string;
   email: string;
 }
@@ -26,10 +27,10 @@ export class UserController {
   constructor(private userService: UserService) {}
   //Get all users
   @Get()
-  async fetchAll(@Res() res: Response): Promise<void> {
+  async fetchAll(@Res() res: Response): Promise<User[] | void> {
     const response = await this.userService.fetchUsers();
     if (response.length) {
-      res.json(response);
+      return response;
     } else {
       res.json({ message: 'Database is empty' });
     }
@@ -39,11 +40,11 @@ export class UserController {
   @Get('profile')
   async fetchUser(@Req() req: Request, @Res() res: Response): Promise<void> {
     const { id } = req.user as UserInfo;
-    const response = await this.userService.fetchUser(id);
+    const response: User | ErrorDto = await this.userService.fetchUser(id);
     if (response) {
-      res.json(response);
+      res.json(response) as Response;
     } else {
-      res.json({ message: 'No user found' });
+      res.json({ message: 'No user found' }) as Response;
     }
   }
   //Delete a user profile
