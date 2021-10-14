@@ -41,6 +41,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@jest-mock/express": "^1.4.5",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.1.0",

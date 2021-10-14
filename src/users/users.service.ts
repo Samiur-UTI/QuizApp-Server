@@ -14,7 +14,6 @@ export class UserService {
   async fetchUser(userId: string): Promise<User> {
     const response = await this.userModel.findById(userId);
     if (response) {
-      console.log(response);
       return response;
     }
   }

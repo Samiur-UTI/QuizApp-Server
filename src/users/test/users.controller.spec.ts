@@ -28,22 +28,25 @@ describe('Userscontroller', () => {
       let users: User[] | ErrorDto;
       // eslint-disable-next-line prefer-const
       users = await usersController.fetchAll();
-      expect(users).toHaveLength(1);
-      expect(users).toBeInstanceOf(Array);
+      expect(userService.fetchUsers).toBeCalled();
+      // expect(users).toHaveLength(1);
+      expect(users).toEqual([userStub()]);
     });
   });
 
   describe('get user profile', () => {
-    const { id } = mockRequest();
-    let user: User | ErrorDto;
+    const { id } = mockRequest.user as UserInfo;
     it('should get the userId from the jwt token', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       expect(id).toBeDefined();
       expect(typeof id).toBe('string');
     });
     it('then would fetch user profile with the reference id', async () => {
-      user = await usersController.fetchUser(mockRequest())
+      const user: User | ErrorDto = await usersController.fetchUser(
+        mockRequest,
+      );
       expect(userService.fetchUser).toBeCalledWith(userStub().id);
+      expect(user).toEqual(userStub());
     });
   });
 });

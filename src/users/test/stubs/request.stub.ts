@@ -1,9 +1,15 @@
+import { getMockReq } from '@jest-mock/express';
 import { UserInfo } from '../../users.controller';
-
-export const mockRequest: any = () => {
-  const user: UserInfo = {
-    id: 'sdiuyh28e21ue8213',
-    email: 'sdiuyh28e21ue8213@gmail.',
-  };
-  return user;
-};
+import { User } from '../../../auth/dto/user.dto';
+export const mockRequest = getMockReq({
+  user: {
+    id: '6167fac1c64930d3f0ac3742',
+    email: 'sallu@gmail.com',
+  } as UserInfo,
+  body: {
+    firstName: 'Samiur',
+    lastName: 'Khan',
+    email: 'sallu@gmail.com',
+    password: '1203123xz',
+  } as User,
+});
