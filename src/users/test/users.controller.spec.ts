@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { User } from 'src/auth/dto/user.dto';
-import { UserController } from '../users.controller';
+import { UserController, UserInfo } from '../users.controller';
 import { UserService } from '../users.service';
 import { mockResponse } from './stubs/response.stub';
 import { userStub } from './stubs/user.stub';
@@ -23,21 +23,27 @@ describe('Userscontroller', () => {
     userService = moduleRef.get<UserService>(UserService);
     jest.clearAllMocks();
   });
-  describe('getUsers', async () => {
-    let users: User[] | ErrorDto;
-    // eslint-disable-next-line prefer-const
-    users = await usersController.fetchAll();
-    expect(users).toHaveLength(1);
+  describe('getUsers', () => {
+    it('should fetch all users', async () => {
+      let users: User[] | ErrorDto;
+      // eslint-disable-next-line prefer-const
+      users = await usersController.fetchAll();
+      expect(users).toHaveLength(1);
+      expect(users).toBeInstanceOf(Array);
+    });
   });
-  //   describe('getUser', () => {
-  //     describe('when profile is called', () => {
-  //       let user: User | ErrorDto;
-  //       beforeEach(async () => {
-  //         user = await usersController.fetchUser(mockRequest());
-  //       });
-  //       test('then it should unlock jwt and return the id', () => {
-  //         expect();
-  //       });
-  //     });
-  //   });
+
+  describe('get user profile', () => {
+    const { id } = mockRequest();
+    let user: User | ErrorDto;
+    it('should get the userId from the jwt token', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      expect(id).toBeDefined();
+      expect(typeof id).toBe('string');
+    });
+    it('then would fetch user profile with the reference id', async () => {
+      user = await usersController.fetchUser(mockRequest())
+      expect(userService.fetchUser).toBeCalledWith(userStub().id);
+    });
+  });
 });

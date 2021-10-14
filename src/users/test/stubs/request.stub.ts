@@ -1,6 +1,9 @@
-import { Request } from 'express';
-export const mockRequest = () => {
-  let req: Request;
-  req['user'] = jest.fn().mockReturnValue(req);
-  return req;
+import { UserInfo } from '../../users.controller';
+
+export const mockRequest: any = () => {
+  const user: UserInfo = {
+    id: 'sdiuyh28e21ue8213',
+    email: 'sdiuyh28e21ue8213@gmail.',
+  };
+  return user;
 };
