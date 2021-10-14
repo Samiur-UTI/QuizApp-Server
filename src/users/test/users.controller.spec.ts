@@ -23,21 +23,21 @@ describe('Userscontroller', () => {
     userService = moduleRef.get<UserService>(UserService);
     jest.clearAllMocks();
   });
-  describe('getUser', async () => {
+  describe('getUsers', async () => {
     let users: User[] | ErrorDto;
     // eslint-disable-next-line prefer-const
     users = await usersController.fetchAll();
     expect(users).toHaveLength(1);
   });
-//   describe('getUser', () => {
-//     describe('when profile is called', () => {
-//       let user: User | ErrorDto;
-//       beforeEach(async () => {
-//         user = await usersController.fetchUser(mockRequest());
-//       });
-//       test('then it should unlock jwt and return the id', () => {
-//         expect();
-//       });
-//     });
-//   });
+  //   describe('getUser', () => {
+  //     describe('when profile is called', () => {
+  //       let user: User | ErrorDto;
+  //       beforeEach(async () => {
+  //         user = await usersController.fetchUser(mockRequest());
+  //       });
+  //       test('then it should unlock jwt and return the id', () => {
+  //         expect();
+  //       });
+  //     });
+  //   });
 });

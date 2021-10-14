@@ -14,7 +14,7 @@ import * as bcrypt from 'bcrypt';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request, Response } from 'express';
 import { User } from '../auth/dto/user.dto';
 import { ErrorDto } from 'src/auth/dto/error.dto';
